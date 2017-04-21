@@ -1,0 +1,152 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+    >webflight (v0.1.8)</a>
+</h1>
+<h4>Turns a server into a seed for peer-to-peer content delivery</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.webflight">module webflight</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.webflight.webflight">
+            function <span class="apidocSignatureSpan"></span>webflight
+            <span class="apidocSignatureSpan">(options, serverRoot)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.webflight" id="apidoc.module.webflight">module webflight</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.webflight.webflight" id="apidoc.element.webflight.webflight">
+        function <span class="apidocSignatureSpan"></span>webflight
+        <span class="apidocSignatureSpan">(options, serverRoot)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function WebFlight(options, serverRoot) {
+  Object.keys(options).forEach((key) =&#x3e; {
+    this[key] = options[key]
+  })
+
+  let fileNamesArr = Object.keys(this.routes).map((file) =&#x3e; {
+    return path.basename(this.routes[file])
+  })
+
+  this.count = 0  // non-configurable
+  this.active = false // non-configurable
+  this.fileNames = fileNamesArr // non-configurable
+
+  this.wfPath = options.wfPath || path.join(serverRoot, &#x27;/wfPath&#x27;)  // default
+
+  // TODO: existsSync is deprecated, need alternative
+  if (!fs.existsSync(this.wfPath)) {
+    fs.mkdirSync(this.wfPath)
+    fs.mkdirSync(path.join(this.wfPath, &#x27;js&#x27;))
+  }
+
+  this.wfRoute = options.wfRoute || (&#x27;/wfRoute&#x27;)  // default
+
+  this.seedScript = options.seedScript || path.join(this.wfPath, &#x27;js/wf-seed.js&#x27;)  // default
+
+  this.jsOutputDL = fileNamesArr.map((file) =&#x3e; { // non-configurable
+    if (path.extname(this.routes[file]) === &#x27;.html&#x27;) {
+      file = path.basename(this.routes[file], &#x27;.html&#x27;)
+      return `${this.wfPath}/js/${file}-download.js`
+    } else if (path.extname(this.routes[file]) === &#x27;.ejs&#x27;) {
+      file = path.basename(this.routes[file], &#x27;.ejs&#x27;)
+      return `${this.wfPath}/js/${file}-download.js`
+    }
+  })
+
+  this.htmlOutput = fileNamesArr.map((file) =&#x3e; { // non-configurable
+    return `${this.wfPath}/wf-${file}`
+  })
+
+  this.userCount = options.userCount || 5  // default (redirect)
+  this.prepCount = Math.floor(this.userCount * 0.75)  // non-configurable (start bots)
+  this.stopCount = Math.floor(this.userCount * 0.50)  // non-configurable (kill bots, redirect back)
+
+  this.statusBar = options.statusBar || true // default
+  this.devMode = options.devMode || true // default
+
+  // Require for botGenerator is based on devMode flag
+  setBotGenerator(this.devMode)
+
+  if (!this.siteUrl) showError(&#x27;siteUrl&#x27;)
+  if (!this.assetsPath) showError(&#x27;assetsPath&#x27;)
+  if (!this.assetsRoute) showError(&#x27;assetsRoute&#x27;)
+  if (!this.routes) showError(&#x27;routes&#x27;)
+  if (!options) showError(&#x27;options&#x27;)
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
